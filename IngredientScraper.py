@@ -1,17 +1,16 @@
-
 # Get the url from the textbox
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 import requests
 
-
-url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' #input('Enter a URL: ')
+#url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
+#url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
+url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
 
 # Make a GET request to fetch the raw HTML content
 html_content = requests.get(url).text
 
 # Parse the html content
 soup = BeautifulSoup(html_content, "lxml")
-
 
 #working to get all classes that contain list
 class_ingredients = []
@@ -31,9 +30,17 @@ for list in class_ingredients:
     div = soup.find('div', class_=list)
     
 # Find all the ingredients in the recipe
-ingredients = soup.find_all('div', attrs = {'class':list})
+ingredients = soup.find('div', attrs = {'class':list})
 
 #print ingredients
 for ingredient in ingredients:
-
-    print(ingredient.text)
+    # Check that we're looking at a tag and not a NavigableString, if we are just continue
+    if isinstance(ingredient, NavigableString):
+        continue
+    # Find all <li> tags from ingredient and print
+    for li in ingredient.find_all('li'):
+        print(li.text)
+        
+# print(class_ingredients)
+# print(list)
+# print(ingredients)
