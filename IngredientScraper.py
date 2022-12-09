@@ -2,9 +2,13 @@
 from bs4 import BeautifulSoup, NavigableString
 import requests
 
+# Variables
+
+filename = 'Recipe.txt'
+
 #url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
-#url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
-url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
+url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
+#url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
 
 # Make a GET request to fetch the raw HTML content
 html_content = requests.get(url).text
@@ -40,6 +44,17 @@ for ingredient in ingredients:
     # Find all <li> tags from ingredient and print
     for li in ingredient.find_all('li'):
         print(li.text)
+
+# Same logic as above, but lets write to a file
+with open(filename, 'w') as file:
+    for ingredient in ingredients:
+        # Check that we're looking at a tag and not a NavigableString, if we are just continue
+        if isinstance(ingredient, NavigableString):
+            continue
+        # Find all <li> tags from ingredient and print
+        for li in ingredient.find_all('li'):
+            file.write(li.text)
+            file.write('\n')
         
 # print(class_ingredients)
 # print(list)
