@@ -25,19 +25,10 @@ for cls in classes:
 #print(class_ingredients)
 
 #find if div contains <li> for the classes in class_ingredients
-div_list=[]
 for list in class_ingredients:
-    #print("list:", list)
 
     #find div element classes contained in class_ingredients
     div = soup.find('div', class_=list)
-    #print('div:', div)
-
-    #check if div contains list
-    if div.find("ul") or div.find("ol"):
-        div_list.append(div)
-
-#print("div that contains list:", div_list)
     
 # Find all the ingredients in the recipe
 ingredients = soup.find_all('div', attrs = {'class':list})
