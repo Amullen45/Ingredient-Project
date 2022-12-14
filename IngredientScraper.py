@@ -7,8 +7,8 @@ import requests
 filename = 'Recipe.txt'
 
 
-#url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
-url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
+url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
+#url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
 #url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
 
 # Make a GET request to fetch the raw HTML content
@@ -30,7 +30,8 @@ for cls in classes:
 
 #find header for name of recipe
 for header in soup.find_all('h1'):
-    print(header.text)
+    title = header.text
+    #print(title)
 
 #find if div contains <li> for the classes in class_ingredients
 for list in class_ingredients:
@@ -50,9 +51,12 @@ for ingredient in ingredients:
     for li in ingredient.find_all('li'):
         print(li.text)
 
+ingredient_list = []
 # Same logic as above, but lets write to a file
 with open(filename, 'w') as file:
     for ingredient in ingredients:
+        ingredient_list.append(ingredient.text)
+        #print(ingredient_list)
         # Check that we're looking at a tag and not a NavigableString, if we are just continue
         if isinstance(ingredient, NavigableString):
             continue
