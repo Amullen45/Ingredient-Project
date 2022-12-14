@@ -6,6 +6,7 @@ import requests
 
 filename = 'Recipe.txt'
 
+
 #url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
 url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
 #url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
@@ -26,6 +27,10 @@ for cls in classes:
     if 'ingredients' in cls:
         class_ingredients.append(cls)
 #print(class_ingredients)
+
+#find header for name of recipe
+for header in soup.find_all('h1'):
+    print(header.text)
 
 #find if div contains <li> for the classes in class_ingredients
 for list in class_ingredients:
