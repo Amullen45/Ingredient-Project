@@ -12,8 +12,8 @@ class Recipe:
         self.name = name
         self.ingredients = ingredients
 
-    # def add_recipe(self, name, ingredients):
-    #     self.recipes.append({"name": name, "ingredients": ingredients})
+    def add_recipe(self, name, ingredients):
+        self.recipe_list.append({"name": name, "ingredients": ingredients})
 
     # #define a method to remove an object to the list
     # def remove(self, item):
@@ -94,14 +94,14 @@ inglist = list(ingredient_list)
 variable = title.replace(' ', '_').lower()
 
 #creates new recipe with name: title, ingredients: inglist
-recipe=Recipe(title, inglist)
-
+recipe=Recipe.add_recipe(title, inglist)
+print(recipe)
 #sets global recipe to equal variable (title.replace.lower)
 globals()[variable] = recipe
 
 #appends recipe into Recipe List
-recipe_list.append(recipe)
-print(recipe_list)
+#recipe_list(recipe)
+#print(recipe_list)
 
 
 # Same logic as above, but lets write to a file
