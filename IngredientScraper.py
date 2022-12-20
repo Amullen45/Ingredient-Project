@@ -12,8 +12,8 @@ class Recipe:
         self.name = name
         self.ingredients = ingredients
 
-    def add_recipe(self, name, ingredients):
-        self.recipe_list.append({"name": name, "ingredients": ingredients})
+    def add_recipe(name, ingredients):
+        recipe_list.append({"Name": name, "Ingredients": ingredients})
 
     # #define a method to remove an object to the list
     # def remove(self, item):
@@ -41,8 +41,8 @@ class Recipe:
 filename = 'Recipe.txt'
 
 #url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
-url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
-#url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
+#url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
+url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
 
 # Make a GET request to fetch the raw HTML content
 html_content = requests.get(url).text
@@ -95,13 +95,13 @@ variable = title.replace(' ', '_').lower()
 
 #creates new recipe with name: title, ingredients: inglist
 recipe=Recipe.add_recipe(title, inglist)
-print(recipe)
+
 #sets global recipe to equal variable (title.replace.lower)
 globals()[variable] = recipe
 
 #appends recipe into Recipe List
 #recipe_list(recipe)
-#print(recipe_list)
+print(recipe_list)
 
 
 # Same logic as above, but lets write to a file
