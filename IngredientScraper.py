@@ -2,6 +2,10 @@
 from bs4 import BeautifulSoup, NavigableString
 import requests
 
+#url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
+    #url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
+    #url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
+
 recipe_list = []
 
 #create class to store recipes
@@ -37,86 +41,61 @@ class Recipe:
     #              print(f"  - {ingredient}")
 
 # Variables
+def getIngredients(url):
+    filename = 'Recipe.txt'
 
-filename = 'Recipe.txt'
+    # Make a GET request to fetch the raw HTML content
+    html_content = requests.get(url).text
 
-#url = 'https://www.gimmesomeoven.com/easy-beef-stroganoff-recipe/' #input('Enter a URL: ') # Working
-#url = 'https://www.delish.com/cooking/recipe-ideas/a19636089/creamy-tuscan-chicken-recipe/' # Working
-url = 'https://www.allrecipes.com/recipe/8489146/homemade-smash-burgers/' # New test site
+    # Parse the html content
+    soup = BeautifulSoup(html_content, "lxml")
 
-# Make a GET request to fetch the raw HTML content
-html_content = requests.get(url).text
+    #working to get all classes that contain list
+    class_ingredients = []
+    classes = []
+    for element in soup.find_all('div'):
+        if element.get('class') is not None:
+            classes.extend(element.get('class'))
+    for cls in classes:
+        if 'ingredients' in cls:
+            class_ingredients.append(cls)
 
-# Parse the html content
-soup = BeautifulSoup(html_content, "lxml")
+    #find header for name of recipe
+    for header in soup.find_all('h1'):
+        title = header.text.strip()
+        #print("title:", title)
 
-#working to get all classes that contain list
-class_ingredients = []
-classes = []
-for element in soup.find_all('div'):
-    if element.get('class') is not None:
-        classes.extend(element.get('class'))
-for cls in classes:
-    if 'ingredients' in cls:
-        class_ingredients.append(cls)
+    #find if div contains <li> for the classes in class_ingredients
+    for li in class_ingredients:
 
-#find header for name of recipe
-for header in soup.find_all('h1'):
-    title = header.text
-    #print("title:", title)
-
-#find if div contains <li> for the classes in class_ingredients
-for li in class_ingredients:
-
-    #find div element classes contained in class_ingredients
-    div = soup.find('div', class_=li)
-    
-    # Find all the ingredients in the recipe
-    ingredients = soup.find('div', attrs = {'class':li})
-
-
-ingredient_list = []
-
-for ingredient in ingredients:
-    # Check that we're looking at a tag and not a NavigableString, if we are just continue
-    if isinstance(ingredient, NavigableString):
-        continue
-    # Find all <li> tags from ingredient and print
-    for li in ingredient.find_all('li'):
-        ingredient_list.append(li.text)
-#print("ingredients:", ingredient_list)
-
-inglist = list(ingredient_list)
-#push recipe to Recipe list on Recipelist
-#print("Ingredients:", inglist)
-
-#create variable out of the title
-variable = title.replace(' ', '_').lower()
-
-#creates new recipe with name: title, ingredients: inglist
-recipe=Recipe.add_recipe(title, inglist)
-
-#sets global recipe to equal variable (title.replace.lower)
-globals()[variable] = recipe
-
-#appends recipe into Recipe List
-#recipe_list(recipe)
-print(recipe_list)
-
-
-# Same logic as above, but lets write to a file
-# with open(filename, 'w') as file:
-#     for ingredient in ingredients:
-#         ingredient_list.append(ingredient.text)
-#         #print(ingredient_list)
-#         # Check that we're looking at a tag and not a NavigableString, if we are just continue
-#         if isinstance(ingredient, NavigableString):
-#             continue
-#         # Find all <li> tags from ingredient and print
-#         for li in ingredient.find_all('li'):
-#             file.write(li.text)
-#             file.write('\n')
+        #find div element classes contained in class_ingredients
+        div = soup.find('div', class_=li)
         
-# print(class_ingredients)
-# print(list)
-# print(ingredients)
+        # Find all the ingredients in the recipe
+        ingredients = soup.find('div', attrs = {'class':li})
+
+
+    ingredient_list = []
+
+    for ingredient in ingredients:
+        # Check that we're looking at a tag and not a NavigableString, if we are just continue
+        if isinstance(ingredient, NavigableString):
+            continue
+        # Find all <li> tags from ingredient and print
+        for li in ingredient.find_all('li'):
+            ingredient_list.append(li.text.strip())
+            
+    inglist = list(ingredient_list)
+    #push recipe to Recipe list on Recipelist
+
+    #create variable out of the title
+    variable = title.replace(' ', '_').lower()
+
+    #creates new recipe with name: title, ingredients: inglist
+    recipe=Recipe.add_recipe(title, inglist)
+
+    #sets global recipe to equal variable (title.replace.lower)
+    globals()[variable] = recipe
+
+    return title
+    return inglist
